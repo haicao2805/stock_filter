@@ -1,6 +1,39 @@
-import { ISeleniumContext, Promisable } from '@/commons';
+import { FireantSelectors, ISeleniumContext, Promisable } from '../../../commons';
 import { SeleniumHelper, TestCaseHandler, TTestCaseDecision } from '../../../helper';
 import assert from 'assert';
+import { FireantPage } from '../fireant.page';
+import { Key } from 'selenium-webdriver';
+import { set } from 'lodash';
+import fs from 'fs';
+import dayjs from 'dayjs';
+
+type DataMarketCap = {
+  symbol: string;
+  broker: string;
+  major: string;
+  marketCap: string;
+  eps: string;
+  pe: string;
+  pb: string;
+  ps: string;
+  roa: string;
+  roe: string;
+};
+
+const convertRawToDataMarketCap = (raw: string[]): DataMarketCap => {
+  return {
+    symbol: raw[0],
+    broker: raw[1],
+    major: raw[2],
+    marketCap: raw[3],
+    eps: raw[4],
+    pe: raw[5],
+    pb: raw[6],
+    ps: raw[7],
+    roa: raw[8],
+    roe: raw[9],
+  };
+};
 
 export class Test001 extends TestCaseHandler<ISeleniumContext, {}> {
   validate(...args: any[]): Promisable<TTestCaseDecision> {
@@ -9,16 +42,112 @@ export class Test001 extends TestCaseHandler<ISeleniumContext, {}> {
 
   async execute() {
     const seleniumHelper = this.context.getSync<SeleniumHelper>({ key: 'seleniumHelper' });
+    const driver = seleniumHelper.webDriver;
 
     if (!this.args) {
       assert.fail('[execute] Invalid arguments');
     }
 
-    const driver = seleniumHelper.webDriver;
+    const fireantPage = new FireantPage({ seleniumHelper });
 
-    await driver.get('https://fireant.vn/dashboard');
+    // 1. Navigate to dashboard page
+    await fireantPage.navigateToDashboardPage();
+
+    // 2. Reset if popup noti exist
+    const isPopupNotiDisplayed = await fireantPage.seleniumHelper.isDisplayed({
+      selector: FireantSelectors.POPUP_NOTI_CLOSE_BTN,
+    });
+    if (isPopupNotiDisplayed) {
+      await fireantPage.refresh();
+      await fireantPage.sleep(500);
+    }
+
+    // 3. Reset if popup noti exist
+    const isPopupAiDisplayed = await fireantPage.seleniumHelper.isDisplayed({
+      selector: FireantSelectors.POPUP_AI_CLOSE_BTN,
+    });
+    if (isPopupAiDisplayed) {
+      await fireantPage.refresh();
+      await fireantPage.sleep(500);
+    }
+
+    // 4. Expand window
     await driver.manage().window().maximize();
 
-await driver.sleep(100000);
+    // 5. Click on find oppotinities button
+    await fireantPage.clickFindOpportunitiesBtn();
+
+    // 6. Click on filter tab
+    await fireantPage.clickFilterTab();
+
+    // 7. Delete filter condition
+    await fireantPage.seleniumHelper.click({ selector: FireantSelectors.DELETE_SECOND_FILTER_CONDITION_BTN });
+    await fireantPage.seleniumHelper.click({ selector: FireantSelectors.DELETE_SECOND_FILTER_CONDITION_BTN });
+
+    // 8. Type 1b market cap
+    await fireantPage.sleep(1000);
+    await fireantPage.seleniumHelper.setTextField({
+      selector: FireantSelectors.FILTER_MARKET_CAP_INP,
+      value: '50000',
+    });
+    await fireantPage.sleep(5000);
+
+    // 9. Click FA tab
+    await fireantPage.seleniumHelper.click({ selector: FireantSelectors.FILTER_RESULT_FA_TAB });
+    await fireantPage.sleep(5000);
+
+    // 10. Scroll result table to end and getData
+    const windowSize = await driver.manage().window().getSize();
+    const map: Record<string, any> = {};
+    let currentMapLength = 0;
+    for (let i = 1; i <= 100; i++) {
+      for (let j = 1; j <= 30; j++) {
+        try {
+          const data = await fireantPage.seleniumHelper.getTextField({
+            selector: FireantSelectors.getResultTableRowSelector(j),
+            timeout: 10000,
+          });
+
+          if (!data || !data?.split('\n')?.length) {
+            break;
+          }
+
+          set(map, data.split('\n')[0], convertRawToDataMarketCap(data.split('\n')));
+        } catch (e) {
+          break;
+        }
+      }
+
+      driver
+        .actions()
+        .move({
+          x: windowSize.width / 2,
+          y: windowSize.height / 2,
+        })
+        .click()
+        .sendKeys(Key.ARROW_DOWN)
+        .sendKeys(Key.ARROW_DOWN)
+        .sendKeys(Key.ARROW_DOWN)
+        .sendKeys(Key.ARROW_DOWN)
+        .sendKeys(Key.ARROW_DOWN)
+        .sendKeys(Key.ARROW_DOWN)
+        .perform();
+      await fireantPage.sleep(1000);
+
+      if (currentMapLength === Object.keys(map).length) {
+        break;
+      }
+      currentMapLength = Object.keys(map).length;
+    }
+
+    await fireantPage.sleep(10000);
+
+    fs.writeFileSync(
+      `top-market-cap-${dayjs().format('YYYYMMDDHHmm')}.json`,
+      JSON.stringify({ data: Object.values(map) }),
+      {
+        encoding: 'utf8',
+      },
+    );
   }
 }

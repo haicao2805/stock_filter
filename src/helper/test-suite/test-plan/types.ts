@@ -1,4 +1,4 @@
-import { AnyObject, ITestContext, Promisable } from '@/commons';
+import { AnyObject, ITestContext, Promisable } from '../../../commons';
 import { ITestCase, TestCase } from '../test-case';
 
 export type TTestHook<R extends object> = (testPlan: ITestPlan<R>) => Promisable<void>;

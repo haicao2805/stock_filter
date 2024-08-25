@@ -1,4 +1,4 @@
-import { ISeleniumContext } from '@/commons';
+import { ISeleniumContext } from '../../commons';
 import { MochaTestDescribe, SeleniumTestPlan, TestCase } from '../../helper';
 import { Browser } from 'selenium-webdriver';
 import { Test001 } from './test-cases/test-001';

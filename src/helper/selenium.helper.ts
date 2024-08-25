@@ -1,4 +1,4 @@
-import { TValueOf } from '@/commons';
+import { TValueOf } from '../commons';
 import { Builder, By, WebDriver, WebElement, until as seleniumUtils } from 'selenium-webdriver';
 import { IBrowser } from 'selenium-webdriver/lib/capabilities';
 
@@ -82,9 +82,9 @@ export class SeleniumHelper {
     await element.sendKeys(value);
   }
 
-  async getTextField(opts: { selector: By }) {
-    const { selector } = opts;
-    const element = await this.find({ selector });
+  async getTextField(opts: { selector: By; timeout?: number }) {
+    const { selector, timeout } = opts;
+    const element = await this.find({ selector, timeout });
     if (!element) {
       return '';
     }

@@ -1,4 +1,4 @@
-import { ISeleniumContext, TValueOf } from '@/commons';
+import { ISeleniumContext, TValueOf } from '../../../commons';
 import { ITestPlanOptions, TestPlan } from '.';
 import { IBrowser } from 'selenium-webdriver/lib/capabilities';
 import { SeleniumHelper } from '../../../helper';

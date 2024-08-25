@@ -7,7 +7,7 @@
     "build": "rm dist -rf && tsc",
     "rebuild": "yarn build",
     "prestart:dev": "yarn rebuild",
-    "start:dev": "mocha --timeout 60000 --exit dist/index.js"
+    "start:dev": "mocha --no-timeout dist/index.js"
   },
   "repository": {
     "type": "git",
@@ -34,6 +34,7 @@
     "typescript": "^5.5.4"
   },
   "dependencies": {
+    "dayjs": "^1.11.13",
     "lodash": "^4.17.21",
     "winston": "^3.14.2",
     "winston-daily-rotate-file": "^5.0.0"

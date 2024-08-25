@@ -1,4 +1,4 @@
-import { ITestContext, Promisable } from '@/commons';
+import { ITestContext, Promisable } from '../../../commons';
 import { ITestCaseInput } from '../test-case';
 
 export type TTestCaseDecision = 'SUCCESS' | 'FAIL' | 'UNKNOWN';
