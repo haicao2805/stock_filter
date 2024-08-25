@@ -1,6 +1,6 @@
-import { BasePage } from '../../models';
-import { SeleniumHelper } from '../../helper';
-import { FireantSelectors } from '../../commons';
+import { BasePage } from '.';
+import { SeleniumHelper } from '../helper';
+import { FireantSelectors } from '../commons';
 
 export class FireantPage extends BasePage {
   constructor(opts: { seleniumHelper: SeleniumHelper }) {

@@ -1,17 +1,25 @@
 import { ISeleniumContext } from '../../commons';
 import { MochaTestDescribe, SeleniumTestPlan, TestCase } from '../../helper';
 import { Browser } from 'selenium-webdriver';
-import { Test001 } from './test-cases/test-001';
+import { Test001, Test002 } from './test-cases';
 
 const testPlan = SeleniumTestPlan.withOptions<ISeleniumContext>({
   browser: Browser.CHROME,
-  scope: '000-1b-market-cap',
+  scope: '000-first-filter',
   testCaseResolver: ({ context }) => {
     return [
+      // TestCase.withOptions({
+      //   name: 'Get market cap',
+      //   description: 'Get market cap',
+      //   handler: new Test001({
+      //     context,
+      //     args: {},
+      //   }),
+      // }),
       TestCase.withOptions({
-        name: 'Get 1b market cap',
-        description: 'Get 1b market cap',
-        handler: new Test001({
+        name: 'Get good operating income',
+        description: 'Get good operating income',
+        handler: new Test002({
           context,
           args: {},
         }),
@@ -21,4 +29,3 @@ const testPlan = SeleniumTestPlan.withOptions<ISeleniumContext>({
 });
 
 MochaTestDescribe.withTestPlan({ testPlan }).run();
-

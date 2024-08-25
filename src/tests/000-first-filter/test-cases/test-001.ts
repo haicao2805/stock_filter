@@ -1,7 +1,7 @@
 import { FireantSelectors, ISeleniumContext, Promisable } from '../../../commons';
 import { SeleniumHelper, TestCaseHandler, TTestCaseDecision } from '../../../helper';
 import assert from 'assert';
-import { FireantPage } from '../fireant.page';
+import { FireantPage } from '../../../models';
 import { Key } from 'selenium-webdriver';
 import { set } from 'lodash';
 import fs from 'fs';
@@ -88,24 +88,25 @@ export class Test001 extends TestCaseHandler<ISeleniumContext, {}> {
     await fireantPage.sleep(1000);
     await fireantPage.seleniumHelper.setTextField({
       selector: FireantSelectors.FILTER_MARKET_CAP_INP,
-      value: '50000',
+      value: '2500',
     });
-    await fireantPage.sleep(5000);
+    await fireantPage.sleep(1000);
 
     // 9. Click FA tab
     await fireantPage.seleniumHelper.click({ selector: FireantSelectors.FILTER_RESULT_FA_TAB });
-    await fireantPage.sleep(5000);
+    await fireantPage.sleep(1000);
 
     // 10. Scroll result table to end and getData
     const windowSize = await driver.manage().window().getSize();
     const map: Record<string, any> = {};
     let currentMapLength = 0;
-    for (let i = 1; i <= 100; i++) {
+
+    while (true) {
       for (let j = 1; j <= 30; j++) {
         try {
           const data = await fireantPage.seleniumHelper.getTextField({
             selector: FireantSelectors.getResultTableRowSelector(j),
-            timeout: 10000,
+            timeout: 1000,
           });
 
           if (!data || !data?.split('\n')?.length) {
@@ -132,7 +133,7 @@ export class Test001 extends TestCaseHandler<ISeleniumContext, {}> {
         .sendKeys(Key.ARROW_DOWN)
         .sendKeys(Key.ARROW_DOWN)
         .perform();
-      await fireantPage.sleep(1000);
+      await fireantPage.sleep(500);
 
       if (currentMapLength === Object.keys(map).length) {
         break;
@@ -142,6 +143,7 @@ export class Test001 extends TestCaseHandler<ISeleniumContext, {}> {
 
     await fireantPage.sleep(10000);
 
+    // 11. Write result to json file
     fs.writeFileSync(
       `top-market-cap-${dayjs().format('YYYYMMDDHHmm')}.json`,
       JSON.stringify({ data: Object.values(map) }),
