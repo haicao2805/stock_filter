@@ -21,6 +21,7 @@
   "homepage": "https://github.com/haicao2805/stock_filter#readme",
   "devDependencies": {
     "@types/chai": "^4.3.17",
+    "@types/lodash": "^4.17.7",
     "@types/mocha": "^10.0.7",
     "@types/selenium-webdriver": "^4.1.25",
     "chai": "^5.1.1",
@@ -31,5 +32,10 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "winston": "^3.14.2",
+    "winston-daily-rotate-file": "^5.0.0"
   }
 }
