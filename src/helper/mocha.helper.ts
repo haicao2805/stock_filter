@@ -17,7 +17,7 @@ export class MochaTestDescribe<R extends object> {
 
   run() {
     if (!this.testPlan) {
-      throw Error(`[run] Invalid test plan!`);
+      throw new Error(`[run] Invalid test plan!`);
     }
 
     const suiteFn = () => {

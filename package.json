@@ -4,10 +4,10 @@
   "description": "Cao Chi Hai's Vietnam stock filter",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "rm dist -rf && tsc",
     "rebuild": "yarn build",
     "prestart:dev": "yarn rebuild",
-    "start:dev": "NODE_ENV=development node dist/index.js"
+    "start:dev": "mocha --timeout 60000 --exit dist/index.js"
   },
   "repository": {
     "type": "git",

@@ -1,5 +1,5 @@
 import { AnyObject, ITestContext, Promisable } from '@/commons';
-import { TestCase } from '../test-case';
+import { ITestCase, TestCase } from '../test-case';
 
 export type TTestHook<R extends object> = (testPlan: ITestPlan<R>) => Promisable<void>;
 
@@ -8,6 +8,13 @@ export interface ITestHooks<R extends object> {
   beforeEach?: TTestHook<R>;
   after?: TTestHook<R>;
   afterEach?: TTestHook<R>;
+}
+
+export interface ITestPlanOptions<R extends object> {
+  scope: string;
+  hooks?: ITestHooks<R>;
+  testCases?: Array<ITestCase>;
+  testCaseResolver?: (opts: { context: ITestContext<R> }) => Array<TestCase>;
 }
 
 export interface ITestPlan<R extends object = AnyObject> extends ITestContext<R> {
