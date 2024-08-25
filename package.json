@@ -1,0 +1,35 @@
+{
+  "name": "stock_filter",
+  "version": "0.0.1",
+  "description": "Cao Chi Hai's Vietnam stock filter",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "rebuild": "yarn build",
+    "prestart:dev": "yarn rebuild",
+    "start:dev": "NODE_ENV=development node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/haicao2805/stock_filter.git"
+  },
+  "author": "Cao Chi Hai <haicao2805@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/haicao2805/stock_filter/issues"
+  },
+  "homepage": "https://github.com/haicao2805/stock_filter#readme",
+  "devDependencies": {
+    "@types/chai": "^4.3.17",
+    "@types/mocha": "^10.0.7",
+    "@types/selenium-webdriver": "^4.1.25",
+    "chai": "^5.1.1",
+    "eslint-plugin-prettier": "^5.2.1",
+    "exceljs": "^4.4.0",
+    "mocha": "^10.7.3",
+    "selenium-webdriver": "^4.23.0",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.5.4"
+  }
+}
