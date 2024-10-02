@@ -1,4 +1,4 @@
-import { AnyObject } from '@/commons';
+import { AnyObject } from '../commons';
 
 export class DIContainerHelper<T extends object = AnyObject> {
   private static instance: DIContainerHelper;

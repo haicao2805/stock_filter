@@ -1,4 +1,4 @@
-import { DIContainerHelper, SeleniumHelper } from '@/helper';
+import { DIContainerHelper, SeleniumHelper } from '../../helper';
 import { AnyType } from './common';
 
 export interface ITestContext<R extends object> {
