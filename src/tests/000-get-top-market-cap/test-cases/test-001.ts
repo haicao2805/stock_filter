@@ -7,7 +7,7 @@ import { set } from 'lodash';
 import fs from 'fs';
 import dayjs from 'dayjs';
 
-type DataMarketCap = {
+export type DataMarketCap = {
   symbol: string;
   broker: string;
   major: string;
@@ -36,7 +36,7 @@ const convertRawToDataMarketCap = (raw: string[]): DataMarketCap => {
 };
 
 export class Test001 extends TestCaseHandler<ISeleniumContext, {}> {
-  validate(...args: any[]): Promisable<TTestCaseDecision> {
+  validate(): Promisable<TTestCaseDecision> {
     throw new Error('Method not implemented.');
   }
 
@@ -53,23 +53,8 @@ export class Test001 extends TestCaseHandler<ISeleniumContext, {}> {
     // 1. Navigate to dashboard page
     await fireantPage.navigateToDashboardPage();
 
-    // 2. Reset if popup noti exist
-    const isPopupNotiDisplayed = await fireantPage.seleniumHelper.isDisplayed({
-      selector: FireantSelectors.POPUP_NOTI_CLOSE_BTN,
-    });
-    if (isPopupNotiDisplayed) {
-      await fireantPage.refresh();
-      await fireantPage.sleep(500);
-    }
-
-    // 3. Reset if popup noti exist
-    const isPopupAiDisplayed = await fireantPage.seleniumHelper.isDisplayed({
-      selector: FireantSelectors.POPUP_AI_CLOSE_BTN,
-    });
-    if (isPopupAiDisplayed) {
-      await fireantPage.refresh();
-      await fireantPage.sleep(500);
-    }
+    // 2. Reset if popups exist
+    await fireantPage.closePopupsIfExistDashboardPage();
 
     // 4. Expand window
     await driver.manage().window().maximize();
@@ -84,11 +69,11 @@ export class Test001 extends TestCaseHandler<ISeleniumContext, {}> {
     await fireantPage.seleniumHelper.click({ selector: FireantSelectors.DELETE_SECOND_FILTER_CONDITION_BTN });
     await fireantPage.seleniumHelper.click({ selector: FireantSelectors.DELETE_SECOND_FILTER_CONDITION_BTN });
 
-    // 8. Type 1b market cap
+    // 8. Type market cap
     await fireantPage.sleep(1000);
     await fireantPage.seleniumHelper.setTextField({
       selector: FireantSelectors.FILTER_MARKET_CAP_INP,
-      value: '2500',
+      value: '2000',
     });
     await fireantPage.sleep(1000);
 
@@ -145,7 +130,7 @@ export class Test001 extends TestCaseHandler<ISeleniumContext, {}> {
 
     // 11. Write result to json file
     fs.writeFileSync(
-      `top-market-cap-${dayjs().format('YYYYMMDDHHmm')}.json`,
+      `resources/top-market-cap-${dayjs().format('YYYYMMDD')}.json`,
       JSON.stringify({ data: Object.values(map) }),
       {
         encoding: 'utf8',

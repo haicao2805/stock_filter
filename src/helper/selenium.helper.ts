@@ -108,9 +108,9 @@ export class SeleniumHelper {
     }
   }
 
-  async isDisplayed(opts: { selector: By }) {
-    const { selector } = opts;
-    const element = await this.find({ selector });
+  async isDisplayed(opts: { selector: By; timeout?: number }) {
+    const { selector, timeout } = opts;
+    const element = await this.find({ selector, timeout });
     if (!element) {
       return;
     }
