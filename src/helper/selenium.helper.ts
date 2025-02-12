@@ -36,9 +36,9 @@ export class SeleniumHelper {
     });
   }
 
-  async click(opts: { selector: By }) {
-    const { selector } = opts;
-    const element = await this.find({ selector });
+  async click(opts: { selector: By; timeout?: number }) {
+    const { selector, timeout = 5000 } = opts;
+    const element = await this.find({ selector, timeout });
     if (!element) {
       return;
     }
